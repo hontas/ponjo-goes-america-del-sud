@@ -1,10 +1,10 @@
-## PoJos travels
+## Trips
 
-some description
+### America del sur
 
-### Trips
-- America del sur
-  - [2014-12-28](america-del-sur/2014-12-28.md)
+Under 3 underbara månader i början av 2015 utforskade vi delar av Sydamerika.
+
+- [2014-12-28](america-del-sur/2014-12-28.md)
 
 ### Markdown
 
@@ -29,11 +29,3 @@ Syntax highlighted code block
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/hontas/ponjo-goes-america-del-sud/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
