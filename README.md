@@ -1,8 +1,10 @@
-## Welcome to GitHub Pages
+## PoJos travels
 
-You can use the [editor on GitHub](https://github.com/hontas/ponjo-goes-america-del-sud/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+some description
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Trips
+- America del sur
+  - [2014-12-28](america-del-sur/2014-12-28.md)
 
 ### Markdown
 
