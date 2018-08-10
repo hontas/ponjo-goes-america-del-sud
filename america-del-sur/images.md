@@ -1,3 +1,7 @@
+---
+trip_name: america-del-sur
+---
+
 # images
 
 ![](images/1.1419767594.packningsorgie.jpg)
