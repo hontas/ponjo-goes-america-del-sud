@@ -1,5 +1,5 @@
 ---
-trip_name: Challe och Sebbe i Boston
+trip_name: 2013 - Challe och Sebbe i Boston
 ---
 
 # images
