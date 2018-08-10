@@ -1,7 +1,5 @@
 ## Trips
 
-{% include toc.html html=content %}
-
 ### 2015 - America del sur
 
 Under 3 underbara månader i början av 2015 utforskade vi delar av Sydamerika.
