@@ -1,5 +1,5 @@
 ---
-trip_name: america-del-sur
+trip_name: America del sur
 ---
 
 # images
