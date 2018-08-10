@@ -24,12 +24,14 @@
 
         {% assign grouped_pages = site.pages | group_by:"trip_name" %}
         {% for group in grouped_pages %}
-          <h4 class="toc-title">{{ group.name }}</h4>
-          <ol class="toc-list">
-            {% for node in group.items %}
-              <li class="toc__item"><a href="{{node.url}}">{{node.name | remove: ".md"}} - {{node.title}}</a></li>
-            {% endfor %}
-          </ol>
+          {% if group.name %}
+            <h4 class="toc-title">{{ group.name }}</h4>
+            <ol class="toc-list">
+              {% for node in group.items %}
+                <li class="toc__item"><a href="{{node.url}}">{{node.name | remove: ".md"}} - {{node.title}}</a></li>
+              {% endfor %}
+            </ol>
+          {% endif %}
         {% endfor %}
 
       </header>
