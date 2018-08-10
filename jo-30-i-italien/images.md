@@ -1,3 +1,7 @@
+---
+trip_name: 2013 - Jo 30 i Italien
+---
+
 # images
 
 ![](images/3.1373815811.1-stranddag.jpg)
