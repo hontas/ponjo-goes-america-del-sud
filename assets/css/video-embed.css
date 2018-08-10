@@ -3,6 +3,7 @@
    Add this css for responsive embedded videos in your .css file. */
 
 .embed-container {
+  margin-bottom: 20px;
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
