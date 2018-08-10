@@ -27,6 +27,7 @@
           <h4 class="toc-title">{{ group.name }}</h4>
           <ol class="toc-list">
             {% for node in group.items %}
+              <li>{% for prop in node %}{{ prop }},{% endfor %}</li>
               <li class="toc__item"><a href="{{node.url}}">{{node.title}}</a></li>
             {% endfor %}
           </ol>
