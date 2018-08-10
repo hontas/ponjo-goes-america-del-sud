@@ -1,0 +1,17 @@
+.toc-title {
+  margin-bottom: .5em;
+}
+
+.toc-list {
+  list-style-type: none;
+  margin-bottom: 1em;
+  padding-left: .5em;
+}
+
+/* unset theme styles */
+.toc-list .toc__item {
+  float: none;
+  width: auto;
+  border: none;
+  height: auto;
+}
