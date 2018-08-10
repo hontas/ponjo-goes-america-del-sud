@@ -1,3 +1,7 @@
+---
+trip_name: Challe och Sebbe i Boston
+---
+
 # images
 
 ![](images/4.1363966747.boston-warf.jpg)
