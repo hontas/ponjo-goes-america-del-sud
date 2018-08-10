@@ -22,19 +22,15 @@
 
         <p>{{ site.description | default: site.github.project_tagline }}</p>
 
-        <ol class="toc">
         {% assign grouped_pages = site.pages | group_by:"trip_name" %}
         {% for group in grouped_pages %}
-          <li><strong>{{ group.name }}</strong></li>
-          <li>
-            <ol class="toc">
-              {% for node in group.items %}
-              <a href="{{node.url}}">{{node.title}}</a>
-              {% endfor %}
-            </ol>
-          </li>
+          <h4><strong>{{ group.name }}</h4>
+          <ol class="toc">
+            {% for node in group.items %}
+            <li><a href="{{node.url}}">{{node.title}}</a></li>
+            {% endfor %}
+          </ol>
         {% endfor %}
-        </ol>
 
       </header>
       <section>
