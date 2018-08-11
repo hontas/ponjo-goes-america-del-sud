@@ -38,15 +38,21 @@
 
   function fitMarkersInMap() {
     console.log('fitMarkersInMap', markers);
-    if (!markers.lengt) return;
+    if (!markers.length) {
+      console.log('no images');
+      return;
+    }
 
     if (markers.length === 1) {
+      console.log('only one image');
       const { lat, lng } = markers[0].getLatLng();
       console.log('lat, lng', lat, lng);
       // map.setView([59.3056, 17.965799999999998], 10)
       map.setView([lat, lng], 10);
       return;
     }
+
+    console.log('several images');
 
     const { N, S, W, E } = markers
       .map((marker) => marker.getLatLng())
