@@ -28,6 +28,7 @@
   }
 
   function createMarker(latlng, options = {}, content) {
+    console.log('createMarker');
     const marker = L.marker(latlng, options).addTo(map);
     if (content) {
       marker.bindPopup(content);
@@ -36,12 +37,13 @@
   }
 
   function fitMarkersInMap() {
-    console.log('markers', markers);
+    console.log('fitMarkersInMap', markers);
     if (!markers.lengt) return;
 
     if (markers.length === 1) {
       const { lat, lng } = markers[0].getLatLng();
       console.log('lat, lng', lat, lng);
+      // map.setView([59.3056, 17.965799999999998], 10)
       map.setView([lat, lng], 10);
       return;
     }
