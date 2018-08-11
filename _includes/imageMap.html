@@ -90,7 +90,14 @@
       const imageTitle = this.src.split('/').pop();
       console.log(imageTitle, {lat, lng});
       createMarker([lat, lng], {}, `<p>${imageTitle}</p>`)
-      markers.push({ lat, lng, title: imageTitle });
+
+      const matchingMarker = markers.find((marker) => (marker.lat === lat && marker.lng === lng));
+      if (matchingMarker) {
+        matchingMarker.title.push(imageTitle);
+      } else {
+        markers.push({ lat, lng, title: [imageTitle] });
+      }
+
       fitMarkersInMap();
     });
   }
