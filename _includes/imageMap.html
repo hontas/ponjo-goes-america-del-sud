@@ -58,9 +58,17 @@
 
   function fitMarkersInMap() {
     console.log('markers', markers);
+    if (!markers.lengt) return;
+
+    if (markers.length === 1) {
+      const {lat, lng } = markers[0].getLatLng();
+      map.setView([lat, lng], 13);
+      return;
+    }
+
     const { N, S, W, E } = markers
       .map((marker) => marker.getLatLng())
-      .reduce((res, [lat, lng]) => {
+      .reduce((res, {lat, lng}) => {
         if (!res.N || lat > res.N) {
           res.N = lat;
         }
