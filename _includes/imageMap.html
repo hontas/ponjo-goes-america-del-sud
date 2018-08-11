@@ -69,6 +69,7 @@
         if (!res.W || lng < res.W) {
           res.W = lng;
         }
+        return res;
       }, {});
     console.log('N, W, S, E', N, W, S, E);
     map.fitBounds([
