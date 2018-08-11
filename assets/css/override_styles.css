@@ -1,6 +1,6 @@
 header,
 footer {
-  position: unset;
+  position: unset !important;
 }
 
 .fig {
