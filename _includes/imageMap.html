@@ -5,13 +5,7 @@
   integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
   crossorigin=""></script>
 
-<div id="map"></div>
-<style>
-  #map {
-    height: 480px;
-    width: 100%;
-  }
-</style>
+<div id="map" style="height: 330px;"></div>
 
 <script>
   let map;
@@ -28,7 +22,8 @@
   };
 
   function initMap() {
-    map = L.map('map');
+    console.log('initMap');
+    map = L.map('map').setView([51,4729, −0,4876], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -90,7 +85,9 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded');
     const images = document.querySelectorAll('.fig__img');
+    console.log('images', images);
 
     if (images.length) {
       initMap();
