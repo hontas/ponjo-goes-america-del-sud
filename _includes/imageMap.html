@@ -41,16 +41,6 @@
     return marker;
   }
 
-  function onload() {
-    EXIF.getData(this, function() {
-      const { lat, lng } = getLatLng(this.exifdata);
-      const imageTitle = this.src.split('/').pop();
-      console.log(imageTitle, {lat, lng});
-      markers.push(createMarker([lat, lng], {}, `<p>${imageTitle}</p>`));
-      fitMarkersInMap();
-    });
-  }
-
   function fitMarkersInMap() {
     console.log('markers', markers);
     if (!markers.lengt) return;
@@ -84,14 +74,27 @@
     ]);
   }
 
+  function onload() {
+    console.log('onload');
+    EXIF.getData(this, function() {
+      const { lat, lng } = getLatLng(this.exifdata);
+      const imageTitle = this.src.split('/').pop();
+      console.log(imageTitle, {lat, lng});
+      markers.push(createMarker([lat, lng], {}, `<p>${imageTitle}</p>`));
+      fitMarkersInMap();
+    });
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded');
     const images = document.querySelectorAll('.fig__img');
     console.log('images', images);
 
     if (images.length) {
       initMap();
       images.forEach((img) => img.onload = onload);
+      images
+        .filter((img) => img.complete)
+        .forEach((img) => onload.call(img));
     }
   }, false);
 </script>
