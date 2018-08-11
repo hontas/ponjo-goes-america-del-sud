@@ -15,7 +15,7 @@
     <div class="wrapper">
       <header>
         <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
-        
+
         {% if site.logo %}
           <img src="{{site.logo | relative_url}}" alt="Logo" />
         {% endif %}
@@ -28,7 +28,7 @@
             <h4 class="toc-title">{{ group.name }}</h4>
             <ol class="toc-list">
               {% for node in group.items %}
-                <li class="toc__item"><a href="{{node.url | relative_url}}">{{node.name | remove: ".md"}} - {{node.title}}</a></li>
+                <li class="toc__item"><a href="{{node.url | relative_url}}">{{node.date}} - {{node.title}}</a></li>
               {% endfor %}
             </ol>
           {% endif %}
