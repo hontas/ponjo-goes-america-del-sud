@@ -1,3 +1,13 @@
+.fig {
+  margin: 0 0 1em;
+}
+.fig__img {
+  display: block;
+}
+.fig__caption {
+  font-style: italic;
+}
+
 .toc-title {
   margin-bottom: .5em;
 }
