@@ -45,7 +45,7 @@
 
     if (markers.length === 1) {
       console.log('only one image');
-      const { lat, lng } = markers[0].getLatLng();
+      const { lat, lng } = markers[0];
       console.log('lat, lng', lat, lng);
       // map.setView([59.3056, 17.965799999999998], 10)
       map.setView([lat, lng], 10);
@@ -55,7 +55,6 @@
     console.log('several images');
 
     const { N, S, W, E } = markers
-      .map((marker) => marker.getLatLng())
       .reduce((res, {lat, lng}) => {
         if (!res.N || lat > res.N) {
           res.N = lat;
@@ -84,7 +83,8 @@
       const { lat, lng } = getLatLng(this.exifdata);
       const imageTitle = this.src.split('/').pop();
       console.log(imageTitle, {lat, lng});
-      markers.push(createMarker([lat, lng], {}, `<p>${imageTitle}</p>`));
+      createMarker([lat, lng], {}, `<p>${imageTitle}</p>`)
+      markers.push({ lat, lng, title: imageTitle });
       fitMarkersInMap();
     });
   }
