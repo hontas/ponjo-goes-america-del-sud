@@ -1,5 +1,5 @@
 .DS_Store
-*.html
+ponjo.trip*.html
 Gemfile
 vendor
 .bundle
