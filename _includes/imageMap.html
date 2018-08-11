@@ -41,6 +41,7 @@
 
     if (markers.length === 1) {
       const { lat, lng } = markers[0].getLatLng();
+      console.log('lat, lng', lat, lng);
       map.setView([lat, lng], 10);
       return;
     }
