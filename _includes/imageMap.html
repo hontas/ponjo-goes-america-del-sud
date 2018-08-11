@@ -70,11 +70,17 @@
         }
         return res;
       }, {});
+
     console.log('N, W, S, E', N, W, S, E);
+
     map.fitBounds([
       [N, W],
       [S, E]
     ]);
+
+    if (N === S || E == W) {
+      map.setZoom(13);
+    }
   }
 
   function onload() {
