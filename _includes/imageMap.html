@@ -1,0 +1,93 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+  integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+  crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+  integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+  crossorigin=""></script>
+
+<div id="map"></div>
+<style>
+  #map {
+    height: 480px;
+    width: 100%;
+  }
+</style>
+
+<script>
+  let map;
+  let markers = [];
+
+  const toDecimal = ([deg, min, sec]) => (deg + (min/60) + (sec/3600));
+  const getLatLng = ({ GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef }) => {
+    const latitudeFactor = GPSLatitudeRef === 'N' ? 1 : -1;
+    const longitudeFactor = GPSLongitudeRef === 'E' ? 1 : -1;
+    return {
+      lat: toDecimal(GPSLatitude) * latitudeFactor,
+      lng: toDecimal(GPSLongitude) * longitudeFactor
+    };
+  };
+
+  function initMap() {
+    const { lat, lng } = position;
+    map = L.map('map');
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+    }).addTo(map);
+
+    return map;
+  }
+
+  function createMarker(latlng, options = {}, content) {
+    const marker = L.marker(latlng, options).addTo(map);
+    if (content) {
+      marker.bindPopup(content);
+    }
+    return marker;
+  }
+
+  function onload() {
+    EXIF.getData(this, function() {
+      const { lat, lng } = getLatLng(this.exifdata);
+      const imageTitle = this.src.split('/').pop();
+      console.log(imageTitle, {lat, lng});
+      markers.push(createMarker([lat, lng], {}, `<p>${imageTitle}</p>`));
+      fitMarkersInMap();
+    });
+  }
+
+  function fitMarkersInMap() {
+    console.log('markers', markers);
+    const { N, S, W, E } = markers
+      .map((marker) => marker.getLatLng())
+      .reduce((res, [lat, lng]) => {
+        if (!res.N || lat > res.N) {
+          res.N = lat;
+        }
+        if (!res.S || lat < res.S) {
+          res.S = lat;
+        }
+        if (!res.E || lng > res.E) {
+          res.E = lng;
+        }
+        if (!res.W || lng < res.W) {
+          res.W = lng;
+        }
+      }, {});
+    console.log('N, W, S, E', N, W, S, E);
+    map.fitBounds([
+      [N, W],
+      [S, E]
+    ]);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('.fig__img');
+
+    if (images.length) {
+      initMap();
+      images.forEach((img) => img.onload = onload);
+    }
+  }, false);
+</script>
