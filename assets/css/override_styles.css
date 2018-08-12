@@ -3,11 +3,19 @@ footer {
   position: unset !important;
 }
 
+a:hover,
+a:focus {
+  font-weight: normal;
+  text-decoration: underline;
+}
+
 .fig {
+  display: inline-block;
   margin: 0 0 1em;
 }
 .fig__img {
   display: block;
+  max-height: 330px;
 }
 .fig__caption {
   font-style: italic;
