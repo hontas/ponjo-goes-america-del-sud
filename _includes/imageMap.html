@@ -1,4 +1,4 @@
-<div id="map" style="height: 330px;"></div>
+<div id="map" style="height: 330px; margin-bottom: 20px;"></div>
 
 <script>
   let map;
@@ -47,7 +47,6 @@
       console.log('only one image');
       const { lat, lng } = markers[0];
       console.log('lat, lng', lat, lng);
-      // map.setView([59.3056, 17.965799999999998], 10)
       map.setView([lat, lng], 10);
       return;
     }
@@ -89,13 +88,14 @@
       const { lat, lng } = getLatLng(this.exifdata);
       const imageTitle = this.src.split('/').pop();
       console.log(imageTitle, {lat, lng});
-      createMarker([lat, lng], {}, `<p>${imageTitle}</p>`)
 
       const matchingMarker = markers.find((marker) => (marker.lat === lat && marker.lng === lng));
       if (matchingMarker) {
         matchingMarker.title.push(imageTitle);
+        matchingMarker.marker.setPopupContent(`<p>${matchingMarker.title.join('<br/>')}</p>`);
       } else {
-        markers.push({ lat, lng, title: [imageTitle] });
+        const newMarker = createMarker([lat, lng], {}, `<p>${imageTitle}</p>`)
+        markers.push({ lat, lng, title: [imageTitle], marker: newMarker });
       }
 
       fitMarkersInMap();
