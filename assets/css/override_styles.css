@@ -9,7 +9,8 @@ a:focus {
   text-decoration: underline;
 }
 
-.fig {
+.fig,
+.video {
   display: inline-block;
   margin: 0 0 1em;
 }
@@ -17,8 +18,12 @@ a:focus {
   display: block;
   max-height: 330px;
 }
+.video__caption,
 .fig__caption {
   font-style: italic;
+}
+.video__caption {
+  margin-bottom: 0;
 }
 
 .toc-title {
