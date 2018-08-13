@@ -15,7 +15,7 @@
   };
 
   function initMap() {
-    console.log('initMap');
+    log('initMap');
     map = L.map('map');
     window.map = map;
 
@@ -28,7 +28,7 @@
   }
 
   function createMarker(latlng, options = {}, content) {
-    console.log('createMarker');
+    log('createMarker');
     const marker = L.marker(latlng, options).addTo(map);
     if (content) {
       marker.bindPopup(content);
@@ -37,21 +37,21 @@
   }
 
   function fitMarkersInMap() {
-    console.log('fitMarkersInMap', markers);
+    log('fitMarkersInMap', markers);
     if (!markers.length) {
-      console.log('no images');
+      log('no images');
       return;
     }
 
     if (markers.length === 1) {
-      console.log('only one image');
+      log('only one image');
       const { lat, lng } = markers[0];
-      console.log('lat, lng', lat, lng);
+      log('lat, lng', lat, lng);
       map.setView([lat, lng], 10);
       return;
     }
 
-    console.log('several images');
+    log('several images');
 
     const { N, S, W, E } = markers
       .reduce((res, {lat, lng}) => {
@@ -70,7 +70,7 @@
         return res;
       }, {});
 
-    console.log('N, W, S, E', N, W, S, E);
+    log('N, W, S, E', N, W, S, E);
 
     map.fitBounds([
       [N, W],
@@ -83,11 +83,11 @@
   }
 
   function onload() {
-    console.log('onload');
+    log('onload');
     EXIF.getData(this, function() {
       const { lat, lng } = getLatLng(this.exifdata);
       const imageTitle = this.src.split('/').pop();
-      console.log(imageTitle, {lat, lng});
+      log(imageTitle, {lat, lng});
 
       const matchingMarker = markers.find((marker) => (marker.lat === lat && marker.lng === lng));
       if (matchingMarker) {
@@ -104,7 +104,7 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     const images = Array.from(document.querySelectorAll('.fig__img'));
-    console.log('images', images);
+    log('images', images);
 
     if (images.length) {
       initMap();
@@ -114,4 +114,10 @@
         .forEach((img) => onload.call(img));
     }
   }, false);
+
+  function log(...args) {
+    if (location.origin.includes('localhost')) {
+      console.log(...args);
+    }
+  }
 </script>
