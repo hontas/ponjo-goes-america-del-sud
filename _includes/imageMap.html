@@ -6,6 +6,7 @@
 
   const toDecimal = ([deg, min, sec]) => (deg + (min/60) + (sec/3600));
   const getLatLng = ({ GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef }) => {
+    if (!GPSLatitude || !GPSLongitude) return null;
     const latitudeFactor = GPSLatitudeRef === 'N' ? 1 : -1;
     const longitudeFactor = GPSLongitudeRef === 'E' ? 1 : -1;
     return {
@@ -85,17 +86,18 @@
   function onload() {
     log('onload');
     EXIF.getData(this, function() {
-      const { lat, lng } = getLatLng(this.exifdata);
+      const pos = getLatLng(this.exifdata);
       const imageTitle = this.src.split('/').pop();
-      log(imageTitle, {lat, lng});
+      log(imageTitle, pos);
+      if (!pos) return;
 
-      const matchingMarker = markers.find((marker) => (marker.lat === lat && marker.lng === lng));
+      const matchingMarker = markers.find((marker) => (marker.lat === pos.lat && marker.lng === pos.lng));
       if (matchingMarker) {
         matchingMarker.title.push(imageTitle);
         matchingMarker.marker.setPopupContent(`<p>${matchingMarker.title.join('<br/>')}</p>`);
       } else {
-        const newMarker = createMarker([lat, lng], {}, `<p>${imageTitle}</p>`)
-        markers.push({ lat, lng, title: [imageTitle], marker: newMarker });
+        const newMarker = createMarker([pos.lat, pos.lng], {}, `<p>${imageTitle}</p>`)
+        markers.push({ pos.lat, pos.lng, title: [imageTitle], marker: newMarker });
       }
 
       fitMarkersInMap();
