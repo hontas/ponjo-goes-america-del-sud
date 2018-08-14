@@ -1,7 +1,9 @@
 <div class="gallery">
   {% assign images = include.images | split: ", " %}
 
-  {% for img in images %}
-    {% include figure.html src="{{ img }}" %}
+  {% for imageSrc in images %}
+    <figure class="fig">
+      <img class="fig__img" src="{{ imageSrc }}" />
+    </figure>
   {% endfor %}
 </div>

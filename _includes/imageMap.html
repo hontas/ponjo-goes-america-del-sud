@@ -97,7 +97,7 @@
         matchingMarker.marker.setPopupContent(`<p>${matchingMarker.title.join('<br/>')}</p>`);
       } else {
         const newMarker = createMarker([pos.lat, pos.lng], {}, `<p>${imageTitle}</p>`)
-        markers.push({ pos.lat, pos.lng, title: [imageTitle], marker: newMarker });
+        markers.push({ lat: pos.lat, lng: pos.lng, title: [imageTitle], marker: newMarker });
       }
 
       fitMarkersInMap();
