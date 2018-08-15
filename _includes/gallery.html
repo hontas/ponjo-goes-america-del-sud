@@ -1,18 +1,21 @@
 <div class="gallery">
   {% assign images = include.images | split: ", " %}
+  {% assign captions = include.captions | split: ", " %}
 
   {% for imageSrc in images %}
-    <div class="gallery__img" data-src="{{ imageSrc }}" style="background-image: url('{{ imageSrc }}');"></div>
+    <div class="gallery__img" data-src="{{ imageSrc }}" data-caption="{{ captions[forloop.index] }}" style="background-image: url('{{ imageSrc }}');"></div>
   {% endfor %}
 </div>
 
 <div class="gallery__backdrop">
   <img class="gallery__backdrop__img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" alt="">
+  <p class="gallery__backdrop__caption"></p>
 </div>
 
 <script>
   const gallery = document.querySelector('.gallery');
-  const galleryBackdrop = document.querySelector('.gallery__backdrop');
+  const backdrop = document.querySelector('.gallery__backdrop');
+  const captionEl = document.querySelector('.gallery__backdrop__caption');
   const fullSizeImg = document.querySelector('.gallery__backdrop__img');
 
   gallery.addEventListener('click', handleImgClick, false);
@@ -23,35 +26,35 @@
       return;
     }
 
-    setFullSizeImageSrc(evt.target.dataset.src);
+    setFullSizeData(evt.target.dataset);
     showBackdrop();
-    galleryBackdrop.addEventListener('click', hideBackdrop, false);
+    backdrop.addEventListener('click', hideBackdrop, false);
     document.addEventListener('keydown', handleKeyDown, false);
   }
 
-  function setFullSizeImageSrc(src) {
+  function setFullSizeData({ src, caption }) {
     fullSizeImg.src = src;
+    captionEl.textContent = caption;
   }
 
   function showBackdrop() {
-    galleryBackdrop.classList.add('gallery__backdrop--active');
+    backdrop.classList.add('gallery__backdrop--active');
   }
 
   function hideBackdrop() {
-    galleryBackdrop.classList.remove('gallery__backdrop--active');
-    galleryBackdrop.removeEventListener('click', hideBackdrop, false);
+    backdrop.classList.remove('gallery__backdrop--active');
+    backdrop.removeEventListener('click', hideBackdrop, false);
     document.removeEventListener('keydown', handleKeyDown, false);
   }
 
   function handleKeyDown(evt) {
     const imageName = fullSizeImg.src.split('/').pop();
     const current = document.querySelector(`[data-src$="${imageName}"]`);
-    console.log('current', current);
-    if (evt.key === 'ArrowRight' && current) {
-      setFullSizeImageSrc(current.nextElementSibling.dataset.src);
+    if (evt.key === 'ArrowRight' && current && current.nextElementSibling) {
+      setFullSizeData(current.nextElementSibling.dataset);
     }
-    if (evt.key === 'ArrowLeft' && current) {
-      setFullSizeImageSrc(current.previousElementSibling.dataset.src);
+    if (evt.key === 'ArrowLeft' && current && current.previousElementSibling) {
+      setFullSizeData(current.previousElementSibling.dataset);
     }
     if (evt.key === 'Escape') {
       hideBackdrop();
