@@ -35,6 +35,7 @@ a:focus {
 .gallery__img {
   background-position: center;
   background-size: cover;
+  cursor: pointer;
 }
 .gallery__backdrop {
   background: rgba(0,0,0,.9);
