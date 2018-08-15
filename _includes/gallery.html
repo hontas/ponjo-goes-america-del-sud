@@ -2,8 +2,58 @@
   {% assign images = include.images | split: ", " %}
 
   {% for imageSrc in images %}
-    <figure class="fig">
-      <img class="fig__img" src="{{ imageSrc }}" />
-    </figure>
+    <div class="gallery__img" data-src="{{ imageSrc }}" style="background: url('{{ imageSrc }}');"></div>
   {% endfor %}
 </div>
+
+<div class="gallery__backdrop">
+  <img class="gallery__backdrop__img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" alt="">
+</div>
+
+<script>
+  const gallery = document.querySelctor('.gallery');
+  const galleryBackdrop = document.querySelctor('.gallery__backdrop');
+  const fullSizeImg = document.querySelctor('.gallery__backdrop__img');
+
+  gallery.addEventListener('click', handleImgClick, false);
+
+  function handleImgClick(evt) {
+    if (!evt.target.dataset.src) {
+      console.log('no data src', evt.target);
+      return;
+    }
+
+    setFullSizeImageSrc(evt.target.dataset.src);
+    showBackdrop();
+    galleryBackdrop.addEventListener('click', hideBackdrop, false);
+    document.addEventListener('keydown', handleKeyDown, false);
+  }
+
+  function setFullSizeImageSrc(src) {
+    fullSizeImg.src = evt.target.dataset.src;
+  }
+
+  function showBackdrop() {
+    galleryBackdrop.classList.add('gallery__backdrop--active');
+  }
+
+  function hideBackdrop() {
+    galleryBackdrop.classList.remove('gallery__backdrop--active');
+    galleryBackdrop.removeEventListener('click', hideBackdrop, false);
+    document.removeEventListener('keydown', handleKeyDown, false);
+  }
+
+  function handleKeyDown(evt) {
+    const current = document.querySelector(`.gallery__img[data-src=${fullSizeImg.src}]`);
+    console.log('current', current);
+    if (evt.key === 'ArrowRight' && current) {
+      setFullSizeImageSrc(current.nextElementSibling.dataset.src);
+    }
+    if (evt.key === 'ArrowLeft' && current) {
+      setFullSizeImageSrc(current.previousElementSibling.dataset.src);
+    }
+    if (evt.key === 'Escape') {
+      hideBackdrop();
+    }
+  }
+</script>
