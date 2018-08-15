@@ -2,7 +2,7 @@
   {% assign images = include.images | split: ", " %}
 
   {% for imageSrc in images %}
-    <div class="gallery__img" data-src="{{ imageSrc }}" style="background: url('{{ imageSrc }}');"></div>
+    <div class="gallery__img" data-src="{{ imageSrc }}" style="background-image: url('{{ imageSrc }}');"></div>
   {% endfor %}
 </div>
 
@@ -11,9 +11,9 @@
 </div>
 
 <script>
-  const gallery = document.querySelctor('.gallery');
-  const galleryBackdrop = document.querySelctor('.gallery__backdrop');
-  const fullSizeImg = document.querySelctor('.gallery__backdrop__img');
+  const gallery = document.querySelector('.gallery');
+  const galleryBackdrop = document.querySelector('.gallery__backdrop');
+  const fullSizeImg = document.querySelector('.gallery__backdrop__img');
 
   gallery.addEventListener('click', handleImgClick, false);
 
