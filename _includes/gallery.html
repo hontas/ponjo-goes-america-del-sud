@@ -3,7 +3,7 @@
   {% assign captions = include.captions | split: ", " %}
 
   {% for imageSrc in images %}
-    <div class="gallery__img" data-src="{{ imageSrc }}" data-caption="{{ captions[forloop.index - 1] }}" style="background-image: url('{{ imageSrc }}');"></div>
+    <div class="gallery__img" data-src="{{ imageSrc }}" data-caption="{{ captions[forloop.index0] }}" style="background-image: url('{{ imageSrc }}');"></div>
   {% endfor %}
 </div>
 
