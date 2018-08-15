@@ -44,7 +44,8 @@
   }
 
   function handleKeyDown(evt) {
-    const current = document.querySelector(`.gallery__img[data-src=${fullSizeImg.src}]`);
+    const imageName = fullSizeImg.src.split('/').pop();
+    const current = document.querySelector(`[data-src$="${imageName}"]`);
     console.log('current', current);
     if (evt.key === 'ArrowRight' && current) {
       setFullSizeImageSrc(current.nextElementSibling.dataset.src);
