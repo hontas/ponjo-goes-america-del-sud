@@ -16,7 +16,7 @@
   (function iife() {
     const images = '{{ include.images }}'.split(', ');
     const captions = "{{ include.captions }}".split(', ');
-    galleryImages.push(images);
+    galleryImages = galleryImages.concat(images);
 
     let backdrop = document.querySelector('.gallery__backdrop');
     let fullSizeImg = document.querySelector('.gallery__backdrop__img');
@@ -82,7 +82,13 @@
       const current = document.querySelector(`[data-src$="${imageName}"]`);
       if (evt.key === 'ArrowRight' && current) {
         const nextEl = current.nextElementSibling;
-        current && setFullSizeData(current.nextElementSibling.dataset);
+        if (nextEl) {
+          setFullSizeData(nextEl.dataset);
+        } else {
+          console.log('no foundie next one');
+          const idx = galleryImages.indexOf(current.dataset.src);
+          console.log('next image', galleryImages[idx + 1]);
+        }
       }
       if (evt.key === 'ArrowLeft' && current && current.previousElementSibling) {
         setFullSizeData(current.previousElementSibling.dataset);
