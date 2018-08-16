@@ -1,3 +1,8 @@
+<div class="gallery__backdrop">
+  <img class="gallery__backdrop__img" src="{{ images[0] }}" alt="">
+  <p class="gallery__backdrop__caption">{{ captions[0] }}</p>
+</div>
+
 <div class="gallery">
   {% assign images = include.images | split: ", " %}
   {% assign captions = include.captions | split: ", " %}
@@ -7,57 +12,56 @@
   {% endfor %}
 </div>
 
-<div class="gallery__backdrop">
-  <img class="gallery__backdrop__img" src="{{ images[0] }}" alt="">
-  <p class="gallery__backdrop__caption">{{ captions[0] }}</p>
-</div>
-
 <script>
-  const gallery = document.querySelector('.gallery');
-  const backdrop = document.querySelector('.gallery__backdrop');
-  const captionEl = document.querySelector('.gallery__backdrop__caption');
-  const fullSizeImg = document.querySelector('.gallery__backdrop__img');
+  (function iife() {
+    const images = {{ images }};
+    console.log('images', images);
+    const gallery = document.querySelector('.gallery');
+    const backdrop = document.querySelector('.gallery__backdrop');
+    const captionEl = document.querySelector('.gallery__backdrop__caption');
+    const fullSizeImg = document.querySelector('.gallery__backdrop__img');
 
-  gallery.addEventListener('click', handleImgClick, false);
+    gallery.addEventListener('click', handleImgClick, false);
 
-  function handleImgClick(evt) {
-    if (!evt.target.dataset.src) {
-      console.log('no data src', evt.target);
-      return;
+    function handleImgClick(evt) {
+      if (!evt.target.dataset.src) {
+        console.log('no data src', evt.target);
+        return;
+      }
+
+      setFullSizeData(evt.target.dataset);
+      showBackdrop();
+      backdrop.addEventListener('click', hideBackdrop, false);
+      document.addEventListener('keydown', handleKeyDown, false);
     }
 
-    setFullSizeData(evt.target.dataset);
-    showBackdrop();
-    backdrop.addEventListener('click', hideBackdrop, false);
-    document.addEventListener('keydown', handleKeyDown, false);
-  }
-
-  function setFullSizeData({ src, caption }) {
-    fullSizeImg.src = src;
-    captionEl.textContent = caption;
-  }
-
-  function showBackdrop() {
-    backdrop.classList.add('gallery__backdrop--active');
-  }
-
-  function hideBackdrop() {
-    backdrop.classList.remove('gallery__backdrop--active');
-    backdrop.removeEventListener('click', hideBackdrop, false);
-    document.removeEventListener('keydown', handleKeyDown, false);
-  }
-
-  function handleKeyDown(evt) {
-    const imageName = fullSizeImg.src.split('/').pop();
-    const current = document.querySelector(`[data-src$="${imageName}"]`);
-    if (evt.key === 'ArrowRight' && current && current.nextElementSibling) {
-      setFullSizeData(current.nextElementSibling.dataset);
+    function setFullSizeData({ src, caption }) {
+      fullSizeImg.src = src;
+      captionEl.textContent = caption;
     }
-    if (evt.key === 'ArrowLeft' && current && current.previousElementSibling) {
-      setFullSizeData(current.previousElementSibling.dataset);
+
+    function showBackdrop() {
+      backdrop.classList.add('gallery__backdrop--active');
     }
-    if (evt.key === 'Escape') {
-      hideBackdrop();
+
+    function hideBackdrop() {
+      backdrop.classList.remove('gallery__backdrop--active');
+      backdrop.removeEventListener('click', hideBackdrop, false);
+      document.removeEventListener('keydown', handleKeyDown, false);
     }
-  }
+
+    function handleKeyDown(evt) {
+      const imageName = fullSizeImg.src.split('/').pop();
+      const current = document.querySelector(`[data-src$="${imageName}"]`);
+      if (evt.key === 'ArrowRight' && current && current.nextElementSibling) {
+        setFullSizeData(current.nextElementSibling.dataset);
+      }
+      if (evt.key === 'ArrowLeft' && current && current.previousElementSibling) {
+        setFullSizeData(current.previousElementSibling.dataset);
+      }
+      if (evt.key === 'Escape') {
+        hideBackdrop();
+      }
+    }
+  }())
 </script>
