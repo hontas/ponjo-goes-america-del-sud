@@ -23,9 +23,10 @@
         .filter(({ length }) => length === 3);
 
       console.log('places', places);
-      places.forEach(([name, lat, lng]) => {
-        createMarker([Number(lat), Number(lng)], {}, `<p>${name}</p>`);
-      });
+      markers = markers.concat(places.map(([name, lat, lng]) =>
+        createMarker([Number(lat), Number(lng)], {}, `<p>${name}</p>`)
+      );
+      fitMarkersInMap();
     } catch (e) {
       console.log('caught', e);
     }
