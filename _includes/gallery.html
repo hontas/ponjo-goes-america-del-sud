@@ -82,14 +82,12 @@
       const current = getImgFromDataSrc(imageName);
       if (evt.key === 'ArrowRight' && current) {
         const nextEl = getNextImage(current);
-        console.log('nextEl', nextEl);
         if (nextEl) {
           setFullSizeData(nextEl.dataset);
         }
       }
-      if (evt.key === 'ArrowLeft' && current && current.previousElementSibling) {
+      if (evt.key === 'ArrowLeft' && current) {
         const prevEl = getNextImage(current, -1);
-        console.log('previousEl', prevEl);
         if (prevEl) {
           setFullSizeData(prevEl.dataset);
         }
