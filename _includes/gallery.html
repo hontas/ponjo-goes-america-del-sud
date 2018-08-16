@@ -14,9 +14,12 @@
 
 <script>
   (function iife() {
-    const images = '{{ include.images }}';
-    console.log('images', images);
-    const gallery = document.querySelector('.gallery');
+    const images = '{{ include.images }}'.split(', ');
+    const firstImage = document.querySelector(`[data-src$="${images[0]}"]`);
+    let gallery = firstImage.parentElement;
+    while (!gallery.matches('.gallery')) {
+      gallery = gallery.parentElement;
+    }
     const backdrop = document.querySelector('.gallery__backdrop');
     const captionEl = document.querySelector('.gallery__backdrop__caption');
     const fullSizeImg = document.querySelector('.gallery__backdrop__img');
