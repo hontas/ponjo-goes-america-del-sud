@@ -14,7 +14,7 @@
 
 <script>
   (function iife() {
-    const images = {{ images }};
+    const images = '{{ include.images }}';
     console.log('images', images);
     const gallery = document.querySelector('.gallery');
     const backdrop = document.querySelector('.gallery__backdrop');
