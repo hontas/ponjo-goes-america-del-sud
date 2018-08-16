@@ -79,23 +79,36 @@
 
     function handleKeyDown(evt) {
       const imageName = fullSizeImg.src.split('/').pop();
-      const current = document.querySelector(`[data-src$="${imageName}"]`);
+      const current = getImgFromDataSrc(imageName);
       if (evt.key === 'ArrowRight' && current) {
-        const nextEl = current.nextElementSibling;
+        const nextEl = getNextImage(current);
+        console.log('nextEl', nextEl);
         if (nextEl) {
           setFullSizeData(nextEl.dataset);
-        } else {
-          console.log('no foundie next one');
-          const idx = galleryImages.indexOf(current.dataset.src);
-          console.log('next image', galleryImages[idx + 1]);
         }
       }
       if (evt.key === 'ArrowLeft' && current && current.previousElementSibling) {
-        setFullSizeData(current.previousElementSibling.dataset);
+        const prevEl = getNextImage(current, -1);
+        console.log('previousEl', prevEl);
+        if (prevEl) {
+          setFullSizeData(prevEl.dataset);
+        }
       }
       if (evt.key === 'Escape') {
         hideBackdrop();
       }
+    }
+
+    function getNextImage(currentEl, delta = 1) {
+      const nextEl = delta > 0 ? currentEl.nextElementSibling : current.previousElementSibling;
+      if (nextEl) return nextEl;
+      let nextIndex = (galleryImages.indexOf(current.dataset.src) + delta) % galleryImages.length; // cycle up
+      if (nextIndex < 0) nextIndex = galleryImages.length - 1; // cycle down
+      return galleryImages[nextIndex] && getImgFromDataSrc(galleryImages[nextIndex]);
+    }
+
+    function getImgFromDataSrc(src) {
+      return document.querySelector(`[data-src$="${src}"]`);
     }
   }())
 </script>
