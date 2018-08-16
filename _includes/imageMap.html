@@ -25,7 +25,7 @@
       console.log('places', places);
       markers = markers.concat(places.map(([name, lat, lng]) =>
         createMarker([Number(lat), Number(lng)], {}, `<p>${name}</p>`)
-      );
+      ));
       fitMarkersInMap();
     } catch (e) {
       console.log('caught', e);
