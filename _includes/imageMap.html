@@ -4,19 +4,6 @@
   let map;
   let markers = [];
 
-  try {
-    const places = "{{ include.places }}"
-      .split('|')
-      .map((place) => place.split(','));
-
-    console.log('places', places);
-    places.forEach(([name, lat, lng]) => {
-      createMarker([Number(lat), Number(lng)], {}, `<p>${name}</p>`);
-    });
-  } catch (e) {
-    console.log('caught', e);
-  }
-
   const toDecimal = ([deg, min, sec]) => (deg + (min/60) + (sec/3600));
   const getLatLng = ({ GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef }) => {
     if (!GPSLatitude || !GPSLongitude) return null;
@@ -27,6 +14,22 @@
       lng: toDecimal(GPSLongitude) * longitudeFactor
     };
   };
+
+  function setPlacesMarkers() {
+    try {
+      const places = "{{ include.places }}"
+        .split('|')
+        .map((place) => place.split(','))
+        .filter(({ length }) => length === 3);
+
+      console.log('places', places);
+      places.forEach(([name, lat, lng]) => {
+        createMarker([Number(lat), Number(lng)], {}, `<p>${name}</p>`);
+      });
+    } catch (e) {
+      console.log('caught', e);
+    }
+  }
 
   function initMap() {
     log('initMap');
@@ -127,7 +130,11 @@
       images
         .filter((img) => img.complete)
         .forEach((img) => onload.call(img));
+
+      setPlacesMarkers();
     }
+
+
   }, false);
 
   function log(...args) {
