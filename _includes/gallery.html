@@ -1,29 +1,37 @@
-<div class="gallery__backdrop">
-  <img class="gallery__backdrop__img" src="{{ images[0] }}" alt="">
-  <p class="gallery__backdrop__caption">{{ captions[0] }}</p>
-</div>
-
 <div class="gallery">
   {% assign images = include.images | split: ", " %}
   {% assign captions = include.captions | split: ", " %}
 
   {% for imageSrc in images %}
-    <div class="gallery__img" data-src="{{ imageSrc }}" data-caption="{{ captions[forloop.index0] }}" style="background-image: url('{{ imageSrc }}');"></div>
+    <div
+      class="gallery__img"
+      data-src="{{ imageSrc }}"
+      data-caption="{{ captions[forloop.index0] }}"
+      style="background-image: url('{{ imageSrc }}');"></div>
   {% endfor %}
 </div>
 
 <script>
+  galleryImages = window.galleryImages || [];
   (function iife() {
     const images = '{{ include.images }}'.split(', ');
+    const captions = '{{ include.captions }}'.split(', ');
+    galleryImages.push(images);
+
+    let backdrop = document.querySelector('.gallery__backdrop');
+    let fullSizeImg = document.querySelector('.gallery__backdrop__img');
+    let captionEl = document.querySelector('.gallery__backdrop__caption');
+
+    if (!backdrop) {
+      console.log('No backdrop in DOM - creating...');
+      backdrop = createAndAppendBackdrop();
+    }
+
     const firstImage = document.querySelector(`[data-src$="${images[0]}"]`);
     let gallery = firstImage.parentElement;
     while (!gallery.matches('.gallery')) {
       gallery = gallery.parentElement;
     }
-    const backdrop = document.querySelector('.gallery__backdrop');
-    const captionEl = document.querySelector('.gallery__backdrop__caption');
-    const fullSizeImg = document.querySelector('.gallery__backdrop__img');
-
     gallery.addEventListener('click', handleImgClick, false);
 
     function handleImgClick(evt) {
@@ -36,6 +44,22 @@
       showBackdrop();
       backdrop.addEventListener('click', hideBackdrop, false);
       document.addEventListener('keydown', handleKeyDown, false);
+    }
+
+    function createAndAppendBackdrop() {
+      const bd = document.createElement('div');
+      bd.classList.add('gallery__backdrop');
+      fullSizeImg = document.createElement('img');
+      fullSizeImg.classList.add('gallery__backdrop__img');
+      fullSizeImg.src = images[0];
+      captionEl = document.createElement('p');
+      captionEl.classList.add('gallery__backdrop__caption');
+      captionEl.textContent = captions[0];
+
+      bd.appendChild(fullSizeImg);
+      bd.appendChild(captionEl);
+      document.body.appendChild(bd);
+      return bd;
     }
 
     function setFullSizeData({ src, caption }) {
