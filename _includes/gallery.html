@@ -100,7 +100,7 @@
     }
 
     function getNextImage(currentEl, delta = 1) {
-      const nextEl = delta > 0 ? currentEl.nextElementSibling : current.previousElementSibling;
+      const nextEl = delta > 0 ? currentEl.nextElementSibling : currentEl.previousElementSibling;
       if (nextEl) return nextEl;
       let nextIndex = (galleryImages.indexOf(currentEl.dataset.src) + delta) % galleryImages.length; // cycle up
       if (nextIndex < 0) nextIndex = galleryImages.length - 1; // cycle down
