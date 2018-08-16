@@ -4,7 +4,7 @@
 
   {% for imageSrc in images %}
     <div
-      class="gallery__img"
+      class="gallery__img js-img"
       data-src="{{ imageSrc }}"
       data-caption="{{ captions[forloop.index0] }}"
       style="background-image: url('{{ imageSrc }}');"></div>
@@ -102,7 +102,7 @@
     function getNextImage(currentEl, delta = 1) {
       const nextEl = delta > 0 ? currentEl.nextElementSibling : current.previousElementSibling;
       if (nextEl) return nextEl;
-      let nextIndex = (galleryImages.indexOf(current.dataset.src) + delta) % galleryImages.length; // cycle up
+      let nextIndex = (galleryImages.indexOf(currentEl.dataset.src) + delta) % galleryImages.length; // cycle up
       if (nextIndex < 0) nextIndex = galleryImages.length - 1; // cycle down
       return galleryImages[nextIndex] && getImgFromDataSrc(galleryImages[nextIndex]);
     }

@@ -1,4 +1,9 @@
 <figure class="fig">
-  <img class="fig__img" src="{{ include.src }}" alt="{{ include.caption }}" />
+  <img
+    class="fig__img js-img"
+    src="{{ include.src }}"
+    data-src="{{ include.src }}"
+    alt="{{ include.caption }}"
+    data-caption="{{ include.caption }}"/>
   <figcaption class="fig__caption">{{ include.caption }}</figcaption>
 </figure>
