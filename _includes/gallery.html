@@ -15,7 +15,7 @@
   galleryImages = window.galleryImages || [];
   (function iife() {
     const images = '{{ include.images }}'.split(', ');
-    const captions = '{{ include.captions }}'.split(', ');
+    const captions = "{{ include.captions }}".split(', ');
     galleryImages.push(images);
 
     let backdrop = document.querySelector('.gallery__backdrop');
@@ -80,8 +80,9 @@
     function handleKeyDown(evt) {
       const imageName = fullSizeImg.src.split('/').pop();
       const current = document.querySelector(`[data-src$="${imageName}"]`);
-      if (evt.key === 'ArrowRight' && current && current.nextElementSibling) {
-        setFullSizeData(current.nextElementSibling.dataset);
+      if (evt.key === 'ArrowRight' && current) {
+        const nextEl = current.nextElementSibling;
+        current && setFullSizeData(current.nextElementSibling.dataset);
       }
       if (evt.key === 'ArrowLeft' && current && current.previousElementSibling) {
         setFullSizeData(current.previousElementSibling.dataset);
