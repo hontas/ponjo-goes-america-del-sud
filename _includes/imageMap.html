@@ -3,6 +3,7 @@
 <script>
   let map;
   let markers = [];
+  window.mapMessages = [];
 
   const toDecimal = ([deg, min, sec]) => (deg + (min/60) + (sec/3600));
   const getLatLng = ({ GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef }) => {
@@ -38,7 +39,6 @@
     log('initMap');
     map = L.map('map');
     window.map = map;
-    window.map.messages = [];
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -145,7 +145,7 @@
     if (location.origin.includes('localhost')) {
       console.log(...args);
     } else {
-      window.map.messages.push(...args);
+      window.mapMessages.push(...args);
     }
   }
 </script>
