@@ -1,0 +1,15 @@
+<div class="image-grid">
+  {% assign images = include.images | split: ", " %}
+  {% assign captions = include.captions | split: ", " %}
+
+  {% for imageSrc in images %}
+    <div class="image-grid__placeholder">
+      <img
+        class="image-grid__img js-img"
+        src="{{ imageSrc }}"
+        data-src="{{ imageSrc }}"
+        data-caption="{{ captions[forloop.index0] }}"
+      />
+    </div>
+  {% endfor %}
+</div>

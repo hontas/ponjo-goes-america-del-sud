@@ -23,15 +23,16 @@
         .map((place) => place.split(','))
         .filter(({ length }) => length === 3);
 
-      console.log('places', places);
-      places.forEach(([name, lat, lng]) => {
-        console.log('name, lat, lng', name, Number(lat), Number(lng));
-        const newMarker = createMarker([Number(lat), Number(lng)], {}, `<p>${name}</p>`);
+      log('places', places);
+      places.forEach(([name, latitude, longitude]) => {
+        const lat = Number(latitude);
+        const lng = Number(longitude);
+        const newMarker = createMarker([lat, lng], {}, `<p>${name}</p>`);
         markers.push({ lat, lng, title: [name], marker: newMarker })
       });
-      fitMarkersInMap();
+      scheduleMarkerFitting();
     } catch (e) {
-      console.log('caught', e);
+      log('[setPlacesMarkers] Caught error:', e);
     }
   }
 
@@ -49,12 +50,17 @@
   }
 
   function createMarker(latlng, options = {}, content) {
-    log('createMarker');
     const marker = L.marker(latlng, options).addTo(map);
     if (content) {
       marker.bindPopup(content);
     }
     return marker;
+  }
+
+  let fitMarkersInMapTimeoutId;
+  function scheduleMarkerFitting() {
+    clearTimeout(fitMarkersInMapTimeoutId);
+    fitMarkersInMapTimeoutId =setTimeout(fitMarkersInMap, 50);
   }
 
   function fitMarkersInMap() {
@@ -65,14 +71,10 @@
     }
 
     if (markers.length === 1) {
-      log('only one image');
       const { lat, lng } = markers[0];
-      log('lat, lng', lat, lng);
       map.setView([lat, lng], 10);
       return;
     }
-
-    log('several images');
 
     const { N, S, W, E } = markers
       .reduce((res, {lat, lng}) => {
@@ -91,8 +93,6 @@
         return res;
       }, {});
 
-    log('N, W, S, E', N, W, S, E);
-
     map.fitBounds([
       [N, W],
       [S, E]
@@ -104,29 +104,26 @@
   }
 
   function onload() {
-    log('onload');
     EXIF.getData(this, function() {
       const pos = getLatLng(this.exifdata);
       const imageTitle = this.src.split('/').pop();
-      log(imageTitle, pos);
       if (!pos) return;
 
       const matchingMarker = markers.find((marker) => (marker.lat === pos.lat && marker.lng === pos.lng));
       if (matchingMarker) {
         matchingMarker.title.push(imageTitle);
-        matchingMarker.marker.setPopupContent(`<p>${matchingMarker.title.join('<br/>')}</p>`);
+        matchingMarker.marker.setPopupContent(`<p>${matchingMarker.title.length} bilder</p>`);
       } else {
         const newMarker = createMarker([pos.lat, pos.lng], {}, `<p>${imageTitle}</p>`)
         markers.push({ lat: pos.lat, lng: pos.lng, title: [imageTitle], marker: newMarker });
       }
 
-      fitMarkersInMap();
+      scheduleMarkerFitting();
     });
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-    const images = Array.from(document.querySelectorAll('.fig__img'));
-    log('images', images);
+    const images = Array.from(document.querySelectorAll('.js-img'));
 
     if (images.length) {
       initMap();

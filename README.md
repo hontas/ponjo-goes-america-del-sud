@@ -1,8 +1,8 @@
 ## Trips
 
 ### ToDo
-[] - Förstasida
-[] - Karta över varje resa
+- [ ] Förstasida
+- [ ] Karta över varje resa
 
 ### 2015 - America del sur
 

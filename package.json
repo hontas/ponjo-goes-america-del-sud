@@ -1,0 +1,14 @@
+{
+  "name": "ponjo-travels",
+  "version": "1.0.0",
+  "description": "Our travelblogs",
+  "scripts": {
+    "dev": "bundle exec jekyll serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hontas/ponjo-travels.git"
+  },
+  "author": "",
+  "homepage": "https://hontas.github.io/ponjo-travels"
+}

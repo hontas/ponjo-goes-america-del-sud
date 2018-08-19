@@ -1,0 +1,103 @@
+<div class="image-gallery">
+  <img class="image-gallery__img" />
+  <div class="image-gallery__caption"></div>
+</div>
+
+<script>
+  (function iife() {
+    let galleryImages;
+    let currentImage;
+
+    const baseClassName = 'image-gallery';
+    const backdrop = document.querySelector(`.${baseClassName}`);
+    const fullSizeImg = document.querySelector(`.${baseClassName}__img`);
+    const captionEl = document.querySelector(`.${baseClassName}__caption`);
+
+    backdrop.addEventListener('mousewheel', preventDocScroll, false);
+    document.addEventListener('click', handleImgClick, false);
+    document.addEventListener('DOMContentLoaded', () => {
+      galleryImages = Array.from(document.querySelectorAll('.js-img'));
+      window.galleryImages = galleryImages;
+    }, false);
+
+    function handleImgClick({ target }) {
+      if (!target.matches('.js-img')) return;
+      if (!target.dataset.src) {
+        log('no data src', target);
+        return;
+      }
+
+      currentImage = target;
+      setFullSizeData(target.dataset);
+      showBackdrop();
+      backdrop.addEventListener('click', hideBackdrop, false);
+      document.addEventListener('keydown', handleKeyDown, false);
+      document.addEventListener('touchstart', handleTouchStart, false);
+    }
+
+    function preventDocScroll(evt) {
+      evt.preventDefault();
+      return false;
+    }
+
+    function setFullSizeData({ src, caption }) {
+      fullSizeImg.src = src;
+      captionEl.textContent = caption;
+    }
+
+    function showBackdrop() {
+      backdrop.classList.add(`${baseClassName}--active`);
+    }
+
+    function hideBackdrop() {
+      backdrop.classList.remove(`${baseClassName}--active`);
+      backdrop.removeEventListener('click', hideBackdrop, false);
+      document.removeEventListener('keydown', handleKeyDown, false);
+      document.removeEventListener('touchstart', handleTouchStart, false);
+    }
+
+    function handleTouchStart({ touches }) {
+      const touchstartX = touches[0].screenX;
+      document.addEventListener('touchend', function handleTouchEnd({ changedTouches }) {
+        document.removeEventListener('touchend', handleTouchEnd, false);
+        const deltaX = touchstartX - changedTouches[0].screenX;
+        if (deltaX === 0) return; // TAP
+        const key = deltaX > 0 ? 'ArrowRight' : 'ArrowLeft'; // SWIPE
+        handleKeyDown({ key });
+      }, false);
+    }
+
+    function handleKeyDown({ key }) {
+      if (!currentImage) {
+        log('[handleKeyDown] no current image');
+        return;
+      }
+
+      const delta = key === 'ArrowRight' ? 1 : -1;
+
+      if (['ArrowRight', 'ArrowLeft'].includes(key)) {
+        const nextEl = getNextImage(currentImage, delta);
+        if (nextEl) {
+          currentImage = nextEl;
+          setFullSizeData(nextEl.dataset);
+        }
+      }
+
+      if (['Escape', 'Enter'].includes(key)) {
+        hideBackdrop();
+        currentImage = null;
+      }
+    }
+
+    function getNextImage(currentEl, delta = 1) {
+      if (![1, -1].includes(delta)) {
+        log('[getNextImage] delta must be either 1 or -1');
+        return;
+      }
+
+      const nextIndex = (galleryImages.indexOf(currentEl) + delta) % galleryImages.length; // cycle up
+      if (nextIndex < 0) nextIndex = galleryImages.length - 1; // cycle down
+      return galleryImages[nextIndex];
+    }
+  }())
+</script>
