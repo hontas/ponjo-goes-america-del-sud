@@ -8,3 +8,7 @@ a:focus {
   font-weight: normal !important;
   text-decoration: underline;
 }
+
+.toc-list--active {
+  font-weight: bold;
+}

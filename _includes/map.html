@@ -60,7 +60,7 @@
   let fitMarkersInMapTimeoutId;
   function scheduleMarkerFitting() {
     clearTimeout(fitMarkersInMapTimeoutId);
-    fitMarkersInMapTimeoutId =setTimeout(fitMarkersInMap, 50);
+    fitMarkersInMapTimeoutId = setTimeout(fitMarkersInMap, 250);
   }
 
   function fitMarkersInMap() {
@@ -96,7 +96,7 @@
     map.fitBounds([
       [N, W],
       [S, E]
-    ]);
+    ], { padding: [30, 30] });
 
     if (N === S || E == W) {
       map.setZoom(13);
@@ -112,7 +112,7 @@
       const matchingMarker = markers.find((marker) => (marker.lat === pos.lat && marker.lng === pos.lng));
       if (matchingMarker) {
         matchingMarker.title.push(imageTitle);
-        matchingMarker.marker.setPopupContent(`<p>${matchingMarker.title.length} bilder</p>`);
+        matchingMarker.marker.setPopupContent(`<p>Här bodde vi (eller laddade upp bilder)</p>`);
       } else {
         const newMarker = createMarker([pos.lat, pos.lng], {}, `<p>${imageTitle}</p>`)
         markers.push({ lat: pos.lat, lng: pos.lng, title: [imageTitle], marker: newMarker });
