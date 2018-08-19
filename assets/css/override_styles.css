@@ -12,3 +12,17 @@ a:focus {
 .toc-list--active {
   font-weight: bold;
 }
+
+@media (min-width: 576px) {
+  div.wrapper {
+    width: 1024px;
+  }
+}
+.wrapper > header,
+.wrapper > footer {
+  width: 300px;
+}
+.wrapper > section {
+  width: 670px;
+}
+
