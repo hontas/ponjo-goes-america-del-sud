@@ -24,7 +24,7 @@
 
       console.log('places', places);
       places.forEach(([name, lat, lng]) => {
-        console.log('name, lat, lng', name, Number(lat), Number(lng);
+        console.log('name, lat, lng', name, Number(lat), Number(lng));
         const newMarker = createMarker([Number(lat), Number(lng)], {}, `<p>${name}</p>`);
         markers.push({ lat, lng, title: [name], marker: newMarker })
       });
