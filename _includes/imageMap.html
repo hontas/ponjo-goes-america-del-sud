@@ -38,6 +38,7 @@
     log('initMap');
     map = L.map('map');
     window.map = map;
+    window.map.messages = [];
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -143,6 +144,8 @@
   function log(...args) {
     if (location.origin.includes('localhost')) {
       console.log(...args);
+    } else {
+      window.map.messages.push(...args);
     }
   }
 </script>
