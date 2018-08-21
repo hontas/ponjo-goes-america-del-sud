@@ -1,148 +1,159 @@
-<div id="map" style="height: 330px; margin-bottom: 20px;"></div>
+{% capture mapId %}{{ include.id | default: 'map' }}{% endcapture %}
+<div id="{{ mapId }}" style="height: 330px; margin-bottom: 20px;"></div>
 
 <script>
-  let map;
-  let markers = [];
-  window.mapMessages = [];
+  (function iife() {
+    let map;
+    let markers = [];
+    const mapEl = document.getElementById("{{ mapId }}");
+    const links = "{{ include.links }}"
+      .split(',');
+    const places = "{{ include.places }}"
+      .split('|')
+      .map((place) => place.split(','))
+      .filter(({ length }) => length === 3);
+    window.mapMessages = [];
 
-  const toDecimal = ([deg, min, sec]) => (deg + (min/60) + (sec/3600));
-  const getLatLng = ({ GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef }) => {
-    if (!GPSLatitude || !GPSLongitude) return null;
-    const latitudeFactor = GPSLatitudeRef === 'N' ? 1 : -1;
-    const longitudeFactor = GPSLongitudeRef === 'E' ? 1 : -1;
-    return {
-      lat: toDecimal(GPSLatitude) * latitudeFactor,
-      lng: toDecimal(GPSLongitude) * longitudeFactor
+    log('places', places);
+    log('links', links);
+
+    const toDecimal = ([deg, min, sec]) => (deg + (min/60) + (sec/3600));
+    const getLatLng = ({ GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef }) => {
+      if (!GPSLatitude || !GPSLongitude) return null;
+      const latitudeFactor = GPSLatitudeRef === 'N' ? 1 : -1;
+      const longitudeFactor = GPSLongitudeRef === 'E' ? 1 : -1;
+      return {
+        lat: toDecimal(GPSLatitude) * latitudeFactor,
+        lng: toDecimal(GPSLongitude) * longitudeFactor
+      };
     };
-  };
 
-  function setPlacesMarkers() {
-    try {
-      const places = "{{ include.places }}"
-        .split('|')
-        .map((place) => place.split(','))
-        .filter(({ length }) => length === 3);
-
-      log('places', places);
-      places.forEach(([name, latitude, longitude]) => {
-        const lat = Number(latitude);
-        const lng = Number(longitude);
-        const newMarker = createMarker([lat, lng], {}, `<p>${name}</p>`);
-        markers.push({ lat, lng, title: [name], marker: newMarker })
-      });
-      scheduleMarkerFitting();
-    } catch (e) {
-      log('[setPlacesMarkers] Caught error:', e);
-    }
-  }
-
-  function initMap() {
-    log('initMap');
-    map = L.map('map');
-    window.map = map;
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-        maxZoom: 18,
-    }).addTo(map);
-
-    return map;
-  }
-
-  function createMarker(latlng, options = {}, content) {
-    const marker = L.marker(latlng, options).addTo(map);
-    if (content) {
-      marker.bindPopup(content);
-    }
-    return marker;
-  }
-
-  let fitMarkersInMapTimeoutId;
-  function scheduleMarkerFitting() {
-    clearTimeout(fitMarkersInMapTimeoutId);
-    fitMarkersInMapTimeoutId = setTimeout(fitMarkersInMap, 250);
-  }
-
-  function fitMarkersInMap() {
-    log('fitMarkersInMap', markers);
-    if (!markers.length) {
-      log('no images');
-      return;
+    function setPlacesMarkers() {
+      try {
+        places.forEach(([name, latitude, longitude], idx) => {
+          const lat = Number(latitude);
+          const lng = Number(longitude);
+          const link = links[idx];
+          const content = link ? `<p><a href="${link}">${name}</a></p>` : `<p>${name}</p>`;
+          const newMarker = createMarker([lat, lng], {}, content);
+          markers.push({ lat, lng, title: [name], marker: newMarker })
+        });
+        scheduleMarkerFitting();
+      } catch (e) {
+        log('[setPlacesMarkers] Caught error:', e);
+      }
     }
 
-    if (markers.length === 1) {
-      const { lat, lng } = markers[0];
-      map.setView([lat, lng], 10);
-      return;
+    function initMap() {
+      log('initMap');
+      map = L.map(mapEl);
+      window.map = map;
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+      }).addTo(map);
+
+      return map;
     }
 
-    const { N, S, W, E } = markers
-      .reduce((res, {lat, lng}) => {
-        if (!res.N || lat > res.N) {
-          res.N = lat;
-        }
-        if (!res.S || lat < res.S) {
-          res.S = lat;
-        }
-        if (!res.E || lng > res.E) {
-          res.E = lng;
-        }
-        if (!res.W || lng < res.W) {
-          res.W = lng;
-        }
-        return res;
-      }, {});
-
-    map.fitBounds([
-      [N, W],
-      [S, E]
-    ], { padding: [30, 30] });
-
-    if (N === S || E == W) {
-      map.setZoom(13);
+    function createMarker(latlng, options = {}, content) {
+      const marker = L.marker(latlng, options).addTo(map);
+      if (content) {
+        marker.bindPopup(content);
+      }
+      return marker;
     }
-  }
 
-  function onload() {
-    EXIF.getData(this, function() {
-      const pos = getLatLng(this.exifdata);
-      const imageTitle = this.src.split('/').pop();
-      if (!pos) return;
+    let fitMarkersInMapTimeoutId;
+    function scheduleMarkerFitting() {
+      clearTimeout(fitMarkersInMapTimeoutId);
+      fitMarkersInMapTimeoutId = setTimeout(fitMarkersInMap, 250);
+    }
 
-      const matchingMarker = markers.find((marker) => (marker.lat === pos.lat && marker.lng === pos.lng));
-      if (matchingMarker) {
-        matchingMarker.title.push(imageTitle);
-        matchingMarker.marker.setPopupContent(`<p>Här bodde vi (eller laddade upp bilder)</p>`);
-      } else {
-        const newMarker = createMarker([pos.lat, pos.lng], {}, `<p>${imageTitle}</p>`)
-        markers.push({ lat: pos.lat, lng: pos.lng, title: [imageTitle], marker: newMarker });
+    function fitMarkersInMap() {
+      log('fitMarkersInMap', markers);
+      if (!markers.length) {
+        log('no images');
+        return;
       }
 
-      scheduleMarkerFitting();
-    });
-  }
+      if (markers.length === 1) {
+        const { lat, lng } = markers[0];
+        map.setView([lat, lng], 10);
+        return;
+      }
 
-  window.addEventListener('DOMContentLoaded', () => {
-    const images = Array.from(document.querySelectorAll('.js-img'));
+      const { N, S, W, E } = markers
+        .reduce((res, {lat, lng}) => {
+          if (!res.N || lat > res.N) {
+            res.N = lat;
+          }
+          if (!res.S || lat < res.S) {
+            res.S = lat;
+          }
+          if (!res.E || lng > res.E) {
+            res.E = lng;
+          }
+          if (!res.W || lng < res.W) {
+            res.W = lng;
+          }
+          return res;
+        }, {});
 
-    if (images.length) {
-      initMap();
+      map.fitBounds([
+        [N, W],
+        [S, E]
+      ], { padding: [30, 30] });
+
+      if (N === S || E == W) {
+        map.setZoom(13);
+      }
+    }
+
+    function onload() {
+      EXIF.getData(this, function() {
+        const pos = getLatLng(this.exifdata);
+        const imageTitle = this.src.split('/').pop();
+        if (!pos) return;
+
+        const matchingMarker = markers.find((marker) => (marker.lat === pos.lat && marker.lng === pos.lng));
+        if (matchingMarker) {
+          matchingMarker.title.push(imageTitle);
+          matchingMarker.marker.setPopupContent(`<p>Här bodde vi (eller laddade upp bilder)</p>`);
+        } else {
+          const newMarker = createMarker([pos.lat, pos.lng], {}, `<p>${imageTitle}</p>`)
+          markers.push({ lat: pos.lat, lng: pos.lng, title: [imageTitle], marker: newMarker });
+        }
+
+        scheduleMarkerFitting();
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const images = Array.from(document.querySelectorAll('.js-img'));
+
+      if (images.length || places.length) {
+        initMap();
+      } else {
+        mapEl.style.height = 'auto';
+      }
+
+      setPlacesMarkers();
+
       images.forEach((img) => img.onload = onload);
       images
         .filter((img) => img.complete)
         .forEach((img) => onload.call(img));
 
-      setPlacesMarkers();
+    }, false);
+
+    function log(...args) {
+      if (location.origin.includes('localhost')) {
+        console.log(...args);
+      } else {
+        window.mapMessages.push(...args);
+      }
     }
-
-
-  }, false);
-
-  function log(...args) {
-    if (location.origin.includes('localhost')) {
-      console.log(...args);
-    } else {
-      window.mapMessages.push(...args);
-    }
-  }
+  }())
 </script>

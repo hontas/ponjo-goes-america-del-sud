@@ -1,7 +1,3 @@
----
-trip_name: 2015 - America del sur
----
-
 # images
 
 {% include map.html %}

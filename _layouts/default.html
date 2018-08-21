@@ -32,7 +32,7 @@
             <ol class="toc-list">
               {% for node in group.items %}
                 <li class="toc__item">
-                  <a href="{{node.url | relative_url}}" {% if node.date == page.date %}class='toc-list--active'{% endif %}>
+                  <a href="{{node.url | relative_url}}" {% if node.title == page.title %}class='toc-list--active'{% endif %}>
                     {{node.date}} - {{node.title}}
                   </a>
                 </li>
