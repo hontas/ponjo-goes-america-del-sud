@@ -95,7 +95,7 @@
         return;
       }
 
-      const nextIndex = (galleryImages.indexOf(currentEl) + delta) % galleryImages.length; // cycle up
+      let nextIndex = (galleryImages.indexOf(currentEl) + delta) % galleryImages.length; // cycle up
       if (nextIndex < 0) nextIndex = galleryImages.length - 1; // cycle down
       return galleryImages[nextIndex];
     }
