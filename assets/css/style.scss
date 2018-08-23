@@ -70,10 +70,11 @@
   max-height: 90%;
 }
 .image-gallery__caption {
+  color: lightgray;
   flex-basis: 30px;
   flex-shrink: 0;
-  line-height: 30px;
-  color: lightgray;
+  line-height: 1.4em;
+  padding: .5em 1em;
 }
 
 

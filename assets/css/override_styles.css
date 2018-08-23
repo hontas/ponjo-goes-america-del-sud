@@ -9,6 +9,22 @@ a:focus {
   text-decoration: underline;
 }
 
+blockquote {
+  background-color: whitesmoke;
+  border-left-width: 3px !important;
+  color: #444;
+  margin-bottom: 1em !important;
+  padding: .75em !important;
+  padding-left: 20px !important;
+}
+blockquote p:not(:last-of-type) {
+  margin-bottom: .75em;
+}
+blockquote p:last-of-type {
+  font-size: smaller;
+  margin-bottom: 0;
+}
+
 .toc-list--active {
   font-weight: bold;
 }
